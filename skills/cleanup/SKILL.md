@@ -161,6 +161,36 @@ Rotation: when `audit/sessions/` holds more than 30 session folders, delete the 
 (after telling the user) — those are audit records, not junk, so never touch a session folder
 the user asked to keep.
 
+### Protected list — `config.json`
+
+Created on the first run, in the same base directory as `audit/`. It is the single place that
+remembers what must never be proposed again:
+
+```json
+{
+  "version": 1,
+  "protected": [
+    { "path": "D:/Work/thesis", "kind": "prefix", "reason": "user: thesis sources", "addedAt": "2026-11-05T20:00:00+08:00" },
+    { "path": "*.env", "kind": "glob", "reason": "user: secrets" }
+  ],
+  "limits": { "maxBytesPerManifest": 10737418240, "maxItemsPerManifest": 5000, "batchSize": 200 },
+  "audit": { "enabled": true, "redactHome": false, "keepSessions": 30 },
+  "language": "zh"
+}
+```
+
+Rules:
+
+- A `prefix` entry matches by normalized absolute path (case-insensitive on Windows and macOS,
+  case-sensitive on Linux); a `glob` entry matches the final path segment.
+- Any candidate that matches is excluded from the manifest, not merely warned about. If the user
+  insists on deleting a protected path, say that the entry must be removed from `config.json`
+  first and let them do it — never edit the protected list to satisfy a request in the same run.
+- Copy the effective list into the session folder as `protected.json` before the first deletion,
+  so the audit shows exactly what was enforced.
+- If `config.json` is missing, ask the protection question, then create it.
+- Never store file contents, hashes of file contents, or anything from inside the protected paths.
+
 Privacy: paths are recorded as-is locally. If the user asks for redaction, replace the user's
 home directory prefix with `~` in every file of the session. Never upload anything.
 
