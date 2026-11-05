@@ -46,10 +46,15 @@
 
 ```bash
 # 源码开发安装：plugin_manager → action: install_bundle，target 填本目录绝对路径
+# 或用 CLI 加到某个 profile：
+dsh plugin --profile <profile> add link:/absolute/path/to/dsh-clean-agent
 ```
 
 发布版通过 `plugin_manager` 安装 bundle 并在 bundle 列表里勾选。预设只对**新会话**生效：新开一个
 会话，在预设选择器里选「清理模式」。
+
+如果预设卡片显示「加载失败」，诊断文字里会指出具体是哪个插件行失败；已知的失败文本和安全的演练
+沙盒见 [docs/testing.md](docs/testing.md)。
 
 ## 用法
 

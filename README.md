@@ -50,13 +50,19 @@ file names and documents are treated as untrusted data, never as instructions.
 ## Install
 
 ```bash
-# development install from a checkout
-#   plugin_manager → action: install_bundle, target: <absolute path to this directory>
+# from a checkout (development): point the manager at this directory
+plugin_manager → action: install_bundle, target: <absolute path to this directory>
+
+# or from the CLI against a profile
+dsh plugin --profile <profile> add link:/absolute/path/to/dsh-clean-agent
 ```
 
 For a published package, install the bundle with `plugin_manager` and select it in the bundle list.
 A preset is only picked up by **new** sessions: open a new session and choose 清理模式 /
 Cleanup Mode from the preset selector.
+
+If the preset card shows 加载失败, the diagnostic text names the failing plugin row — see
+[docs/testing.md](docs/testing.md) for the known failure texts and a safe rehearsal fixture.
 
 ## Usage
 

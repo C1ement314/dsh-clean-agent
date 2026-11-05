@@ -26,3 +26,12 @@ All notable changes to this project are documented here. The format follows
 - Bilingual display metadata (`locale/en.json`, `locale/zh.json`) and an original icon.
 - Bilingual documentation (`README.md`, `README.zh.md`), MIT license, audit-directory layout and
   protected-path config conventions.
+- `docs/testing.md`: bundle-load checks, a safe rehearsal fixture (PowerShell and bash), and
+  twelve adversarial cases with expected behaviour.
+
+### Fixed
+- The preset failed to mount with `Preset services require isolate realms: compaction`, because
+  `compaction-basic` publishes the `compaction` service and the group declaring it carried no
+  `isolate`. The compaction group now isolates `compaction` in its own realm, as the shipped
+  presets do.
+

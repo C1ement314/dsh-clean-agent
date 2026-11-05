@@ -21,6 +21,7 @@
     "lib",
     "skills",
     "locale",
+    "docs",
     "cordis.patch.yml",
     "icon.svg",
     "README.md",
