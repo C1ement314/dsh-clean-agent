@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "清理模式 Cleanup Mode",
+    "description": "Agent 预设：扫描缓存、临时文件与卸载残留，先出清单、确认后才删，优先丢回收站。"
+  }
+}

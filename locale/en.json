@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "Cleanup Mode",
+    "description": "Agent preset for reclaiming disk space: scans caches, temp files and uninstall leftovers, shows a manifest first, deletes only after confirmation, and prefers the system trash."
+  }
+}
