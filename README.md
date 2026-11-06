@@ -47,6 +47,19 @@ file names and documents are treated as untrusted data, never as instructions.
 - Some locations need administrator/root privileges (`/var`, `C:\Windows\Temp`, `/Library`). The
   agent reports them instead of escalating silently.
 
+### Known incompatibility: profiles that deny host shell tools
+
+Some profiles hide the official shell tools on purpose. The `dsh-ops` bundle does this by default:
+its `deny-host-shell` component denies `pwsh`, `bash` and `pwsh_persistent` for every agent, so a
+preset that mounts `@deepseek-ai/dsh-tool-pwsh` has the tool registered but filtered out of the
+model's tool list. Cleanup Mode needs a shell to measure sizes, probe the trash and delete, so in
+such a profile it stops at step one and tells you why.
+
+Fix it on the profile side: open the `dsh-ops` settings and remove `pwsh` from
+「Host tool names denied by deny-host-shell policy」 (`deniedHostTools`), then start a new session.
+Or run Cleanup Mode in a profile that does not install `dsh-ops`. On a stock DSH profile the
+preset's `pwsh` row mounts normally — this is a profile policy, not a bundle defect.
+
 ## Install
 
 ```bash

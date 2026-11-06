@@ -6,6 +6,14 @@ All notable changes to this project are documented here. The format follows
 
 ## [Unreleased]
 
+### Known issues
+- **Profiles that deny host shell tools.** The `dsh-ops` bundle's `deny-host-shell` component hides
+  `pwsh`, `bash` and `pwsh_persistent` for every agent (default `deniedHostTools`). The preset's
+  `pwsh` row still registers, but the model never sees the tool, so the agent stops at step one
+  with an explanation. Fix on the profile side: remove `pwsh` from `deniedHostTools` in the
+  `dsh-ops` settings, or use a profile without that policy. Documented in both READMEs, and the
+  persona now refuses to continue without a shell instead of guessing.
+
 ### Planned
 - Host-side guard plugin that enforces L0 and the protected-path list in code (v2).
 - End-to-end validation on macOS and Linux.

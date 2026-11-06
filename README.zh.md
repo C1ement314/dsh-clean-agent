@@ -39,6 +39,19 @@
 - **会话需要完整文件系统权限**。清理目标在工作区之外，所以会话沙箱必须是
   `danger-full-access`；`workspace-write` 下 agent 只能侦察，并会提示你提高权限。预设无法给自己
   授权——这是宿主层的策略，刻意如此。
+
+### 已知不兼容：会禁用宿主 shell 工具的 profile
+
+有些 profile 会刻意隐藏官方 shell 工具。`dsh-ops` 组合包默认就是这样：它的 `deny-host-shell`
+组件对所有 agent 禁用 `pwsh`、`bash`、`pwsh_persistent`。结果是：挂载了
+`@deepseek-ai/dsh-tool-pwsh` 的预设，工具虽然注册成功，却会在模型看到的工具清单里被过滤掉。
+清理模式需要 shell 来量体积、探测回收站和执行删除，所以在这种 profile 里它会在第一步停下并说明
+原因。
+
+在 profile 侧修复：打开 `dsh-ops` 的设置，把 `pwsh` 从「Host tool names denied by
+deny-host-shell policy」（`deniedHostTools`）里移除，然后新建会话。或者在一个没有安装 `dsh-ops`
+的 profile 里使用清理模式。原生 DSH profile 上预设的 `pwsh` 行是正常挂载的——这是 profile 策略，
+不是组合包的缺陷。
 - 部分位置需要管理员/root 权限（`/var`、`C:\Windows\Temp`、`/Library` 等），agent 会标注出来，
   而不是偷偷提权。
 

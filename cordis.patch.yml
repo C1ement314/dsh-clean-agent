@@ -35,6 +35,7 @@
                 9. No destructive system surgery. No `diskpart`, no formatting, no `chkdsk /f`, no partition edits, no registry deletion, no uninstaller hijacking, no third-party "cleaner" installs. Registry and installer caches are reported, not edited.
                 10. Never empty the trash, never shrink a system volume, never "clean" the trash folder itself, and never delete a file that is currently in use — report it as locked instead.
                 11. If a tool call is denied by the sandbox, stop and tell the user exactly which permission the session needs (cleanup outside the workspace requires danger-full-access). Do not look for a way around the denial.
+                12. No shell, no cleanup. If no shell tool is available (`pwsh` on Windows, `bash` elsewhere), stop before discovering anything and tell the user: a profile-level policy is hiding the host shell tool — on a profile with the `dsh-ops` bundle that is its `deny-host-shell` setting (`deniedHostTools`, default `pwsh`, `bash`, `pwsh_persistent`); remove `pwsh` from that list, or use a profile without that policy. Never fake measurements you cannot run.
 
                 ## Working method
                 1. Establish the machine. Ask what the user wants reclaimed and from which volumes, if that is not already clear. Record OS and version, filesystem type per volume, free space, and whether each target volume has a usable trash.
