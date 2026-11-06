@@ -59,6 +59,11 @@ command. Record the result in the manifest:
 Never promise reclaimed space from trashed files. In the report say
 「预计释放（清空回收站后生效）」.
 
+If the platform skill's canary test would move a probe file into the trash, run it only when the
+user has authorized a deletion this session. In an inventory-only run, record
+`trash: usable (not canaried: no deletion authorized)` and say why — never delete a probe file just
+to check the bin.
+
 ## 5. Manifest
 
 Show a markdown table in the conversation and write the same data to `manifest.json` in the
