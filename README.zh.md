@@ -77,10 +77,15 @@ profile 可以刻意隐藏官方 shell 工具。`dsh-ops` 组合包通过它的 
 ## 安装
 
 ```bash
+# 用预构建 tarball（推荐）
+dsh plugin --profile <profile> add https://github.com/C1ement314/dsh-clean-agent/releases/download/v0.2.0/dsh-clean-agent-0.2.0.tgz
+
 # 源码开发安装：plugin_manager → action: install_bundle，target 填本目录绝对路径
 # 或用 CLI 加到某个 profile：
 dsh plugin --profile <profile> add link:/absolute/path/to/dsh-clean-agent
 ```
+
+npm 发布因为账号侧的 2FA 配置暂时没完成，所以现阶段预构建安装走 Release 上的 tarball。
 
 发布版通过 `plugin_manager` 安装 bundle 并在 bundle 列表里勾选。预设只对**新会话**生效：新开一个
 会话，在预设选择器里选「清理模式」。
