@@ -88,10 +88,10 @@ not receive it from a mode row. The component form above is not gated that way.
 
 ```bash
 # from npm (recommended)
-dsh plugin --profile <profile> add dsh-clean-agent@0.2.0
+dsh plugin --profile <profile> add dsh-clean-agent@0.2.1
 
 # or from the prebuilt tarball (same version, no npm account needed)
-dsh plugin --profile <profile> add https://github.com/C1ement314/dsh-clean-agent/releases/download/v0.2.0/dsh-clean-agent-0.2.0.tgz
+dsh plugin --profile <profile> add https://github.com/C1ement314/dsh-clean-agent/releases/download/v0.2.1/dsh-clean-agent-0.2.1.tgz
 
 # from a checkout (development): point the manager at this directory
 plugin_manager → action: install_bundle, target: <absolute path to this directory>

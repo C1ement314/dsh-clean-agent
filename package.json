@@ -1,6 +1,6 @@
 {
   "name": "dsh-clean-agent",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Cleanup Mode (清理模式) — a DSH agent preset that reclaims disk space and removes leftovers safely",
   "keywords": [
     "dsh",

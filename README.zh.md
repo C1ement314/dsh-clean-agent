@@ -78,10 +78,10 @@ profile 可以刻意隐藏官方 shell 工具。`dsh-ops` 组合包通过它的 
 
 ```bash
 # 从 npm 安装（推荐）
-dsh plugin --profile <profile> add dsh-clean-agent@0.2.0
+dsh plugin --profile <profile> add dsh-clean-agent@0.2.1
 
 # 或用预构建 tarball（同版本，不需要 npm 账号）
-dsh plugin --profile <profile> add https://github.com/C1ement314/dsh-clean-agent/releases/download/v0.2.0/dsh-clean-agent-0.2.0.tgz
+dsh plugin --profile <profile> add https://github.com/C1ement314/dsh-clean-agent/releases/download/v0.2.1/dsh-clean-agent-0.2.1.tgz
 
 # 源码开发安装：plugin_manager → action: install_bundle，target 填本目录绝对路径
 # 或用 CLI 加到某个 profile：
