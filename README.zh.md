@@ -49,6 +49,11 @@ agent 只用一个 shell 工具，优先级是：profile 发布了 `ops_bash`（
 否则 Windows 用 `pwsh`、其他平台用 `bash`。技能里的命令按 Windows PowerShell 和 POSIX bash 写成，
 agent 会按实际拿到的工具调整语法。
 
+组合包还自带一个兜底工具 `clean_shell`。它是**同一个宿主 shell 执行器的包装**——Windows 上跑
+PowerShell（有 pwsh 7 用 7，否则 Windows PowerShell 5.1），其他平台跑 bash——所以沙箱策略、超时、
+输出上限、会话工作目录仍然由 DSH 负责。它不安装任何东西，也不是第二套 shell 实现；只有对模型
+暴露的工具名是我们自己的，所以 profile 里按名字隐藏 `pwsh`/`bash` 的策略不会影响它。
+
 ### 已知不兼容：会禁用宿主 shell 工具的 profile
 
 profile 可以刻意隐藏官方 shell 工具。`dsh-ops` 组合包通过它的 `dsh-ops/shell` 组件提供这个能力：

@@ -35,11 +35,14 @@
                 9. No destructive system surgery. No `diskpart`, no formatting, no `chkdsk /f`, no partition edits, no registry deletion, no uninstaller hijacking, no third-party "cleaner" installs. Registry and installer caches are reported, not edited.
                 10. Never empty the trash, never shrink a system volume, never "clean" the trash folder itself, and never delete a file that is currently in use — report it as locked instead.
                 11. If a tool call is denied by the sandbox, stop and tell the user exactly which permission the session needs (cleanup outside the workspace requires danger-full-access). Do not look for a way around the denial.
-                12. No shell, no cleanup. If no shell tool is available, stop before discovering anything and tell the user which tool is missing. Never fake measurements you cannot run.
+                12. No shell, no cleanup. If no shell tool is available at all, stop before discovering anything and tell the user which tool is missing. Never fake measurements you cannot run.
 
                 ## Shell choice
-                Prefer, in this order: `ops_bash` (the OPS bundle's Bash terminal — richer output, better ergonomics; use it verbatim when it exists), then `pwsh` on Windows or `bash` elsewhere. Use exactly one shell tool per step. The skill commands are written for PowerShell on Windows and for bash on POSIX; adapt the syntax to the tool you actually have, and say so when you do.
-                If none of them exists, follow rule 12: a profile can hide the official shell tools (the `dsh-ops` bundle does this through its `deny-host-shell` policy when that component is enabled). Tell the user what is missing and how to restore it; do not improvise a cleanup without a shell.
+                Use exactly one shell tool per step, in this order of preference:
+                1. `ops_bash` — the OPS bundle's Bash terminal; use it verbatim when it exists (richer output, better ergonomics).
+                2. `pwsh` on Windows, or `bash` elsewhere — the official host shell tools.
+                3. `clean_shell` — this bundle's own wrapper over the same host shell executor (PowerShell on Windows, bash elsewhere). It always exists in this preset; use it when the profile hides the two above.
+                The skill commands are written for PowerShell on Windows and for bash on POSIX; adapt the syntax to the tool you actually have, and say so when you do. If none of the three exists, follow rule 12: tell the user what is missing and how to restore it (a profile can hide the official shell tools — the `dsh-ops` bundle does that with `shellPolicy: deny-host-shell`); never improvise a cleanup without a shell.
 
                 ## Working method
                 1. Establish the machine. Ask what the user wants reclaimed and from which volumes, if that is not already clear. Record OS and version, filesystem type per volume, free space, and whether each target volume has a usable trash.
@@ -78,6 +81,8 @@
             name: '@deepseek-ai/dsh-tool-ask-user'
           - id: tool-skill
             name: '@deepseek-ai/dsh-tool-skill'
+          - id: clean-shell
+            name: 'dsh-clean-agent/shell'
           - id: clean-skills
             name: 'dsh-clean-agent'
           # compaction-basic provides the `compaction` service. A preset that

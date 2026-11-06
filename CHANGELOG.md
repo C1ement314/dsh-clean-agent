@@ -14,6 +14,12 @@ All notable changes to this project are documented here. The format follows
   remove `pwsh` from that component's `deniedHostTools`, or do not enable the deny policy.
   Documented in both READMEs.
 
+### Added
+- `clean_shell`: a model-facing shell tool that runs through the host shell executor
+  (PowerShell on Windows, bash elsewhere), so the preset has a working shell even when a
+  profile hides the official `pwsh`/`bash` tools. Zero runtime dependencies; sandbox policy,
+  timeouts and output limits still come from DSH.
+
 ### Shell preference
 - The persona now states the shell tool order explicitly: `ops_bash` (OPS bundle) when the profile
   publishes it, then `pwsh` on Windows or `bash` elsewhere, one tool per step. The `dsh-ops` mode

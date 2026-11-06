@@ -54,6 +54,13 @@ profile publishes it, then `pwsh` on Windows or `bash` elsewhere. The skills are
 PowerShell on Windows and bash on POSIX, so the agent adapts the command syntax to whichever tool
 it actually has.
 
+The bundle also ships `clean_shell`, its own tool row, as the last resort. It is a **wrapper over
+the same host shell executor** the official tool uses — PowerShell on Windows (pwsh 7 when present,
+otherwise Windows PowerShell 5.1), bash elsewhere — so sandbox policy, timeouts, output limits and
+the session working directory still come from DSH. Nothing is installed and no second shell
+implementation is involved; only the model-facing tool name is ours, which is why profile policies
+that hide `pwsh`/`bash` by name do not hide it.
+
 ### Known incompatibility: profiles that deny host shell tools
 
 A profile can hide the official shell tools on purpose. The `dsh-ops` bundle offers this through
