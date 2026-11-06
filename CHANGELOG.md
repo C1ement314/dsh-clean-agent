@@ -7,12 +7,18 @@ All notable changes to this project are documented here. The format follows
 ## [Unreleased]
 
 ### Known issues
-- **Profiles that deny host shell tools.** The `dsh-ops` bundle's `deny-host-shell` component hides
-  `pwsh`, `bash` and `pwsh_persistent` for every agent (default `deniedHostTools`). The preset's
-  `pwsh` row still registers, but the model never sees the tool, so the agent stops at step one
-  with an explanation. Fix on the profile side: remove `pwsh` from `deniedHostTools` in the
-  `dsh-ops` settings, or use a profile without that policy. Documented in both READMEs, and the
-  persona now refuses to continue without a shell instead of guessing.
+- **Profiles that deny host shell tools.** The `dsh-ops` bundle can hide `pwsh`, `bash` and
+  `pwsh_persistent` for every agent through its `dsh-ops/shell` component when
+  `shellPolicy: deny-host-shell` is set. The preset's `pwsh` row then registers but the model never
+  sees the tool, so the agent stops at step one with an explanation. Fix on the profile side:
+  remove `pwsh` from that component's `deniedHostTools`, or do not enable the deny policy.
+  Documented in both READMEs.
+
+### Shell preference
+- The persona now states the shell tool order explicitly: `ops_bash` (OPS bundle) when the profile
+  publishes it, then `pwsh` on Windows or `bash` elsewhere, one tool per step. The `dsh-ops` mode
+  rows gate `ops_bash` by preset id and therefore cannot serve this custom preset; its ungated
+  `dsh-ops/shell` component can.
 
 ### Planned
 - Host-side guard plugin that enforces L0 and the protected-path list in code (v2).

@@ -40,20 +40,28 @@
   `danger-full-access`；`workspace-write` 下 agent 只能侦察，并会提示你提高权限。预设无法给自己
   授权——这是宿主层的策略，刻意如此。
 
-### 已知不兼容：会禁用宿主 shell 工具的 profile
-
-有些 profile 会刻意隐藏官方 shell 工具。`dsh-ops` 组合包默认就是这样：它的 `deny-host-shell`
-组件对所有 agent 禁用 `pwsh`、`bash`、`pwsh_persistent`。结果是：挂载了
-`@deepseek-ai/dsh-tool-pwsh` 的预设，工具虽然注册成功，却会在模型看到的工具清单里被过滤掉。
-清理模式需要 shell 来量体积、探测回收站和执行删除，所以在这种 profile 里它会在第一步停下并说明
-原因。
-
-在 profile 侧修复：打开 `dsh-ops` 的设置，把 `pwsh` 从「Host tool names denied by
-deny-host-shell policy」（`deniedHostTools`）里移除，然后新建会话。或者在一个没有安装 `dsh-ops`
-的 profile 里使用清理模式。原生 DSH profile 上预设的 `pwsh` 行是正常挂载的——这是 profile 策略，
-不是组合包的缺陷。
 - 部分位置需要管理员/root 权限（`/var`、`C:\Windows\Temp`、`/Library` 等），agent 会标注出来，
   而不是偷偷提权。
+
+### shell 工具偏好
+
+agent 只用一个 shell 工具，优先级是：profile 发布了 `ops_bash`（OPS 组合包的 Bash 终端）就用它，
+否则 Windows 用 `pwsh`、其他平台用 `bash`。技能里的命令按 Windows PowerShell 和 POSIX bash 写成，
+agent 会按实际拿到的工具调整语法。
+
+### 已知不兼容：会禁用宿主 shell 工具的 profile
+
+profile 可以刻意隐藏官方 shell 工具。`dsh-ops` 组合包通过它的 `dsh-ops/shell` 组件提供这个能力：
+当 `shellPolicy: deny-host-shell` 时，对所有 agent 禁用 `pwsh`、`bash`、`pwsh_persistent`。挂载了
+`@deepseek-ai/dsh-tool-pwsh` 的预设，工具虽然注册成功，却会被过滤出模型可见的工具清单；清理模式
+需要 shell 量体积、探测回收站和执行删除，所以会在第一步停下并说明缺什么。
+
+在 profile 侧修复：把 `pwsh` 从该组件的 `deniedHostTools` 里移除，或者不要启用 deny 策略。另一个
+办法是启用 OPS 的 `shell` 组件（`advise` 模式），它会为所有会话发布 `ops_bash`，agent 会自动优先
+使用它。
+
+注意：`dsh-ops` 的**模式行**（`dsh-ops/mode-standard` 等）只服务内置的四个预设——`ops_bash` 的发布
+按预设 id 门控，所以像本项目这样的自定义预设不会从模式行拿到它；上面那个组件形式没有这层门控。
 
 ## 安装
 

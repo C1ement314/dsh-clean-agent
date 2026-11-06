@@ -47,18 +47,28 @@ file names and documents are treated as untrusted data, never as instructions.
 - Some locations need administrator/root privileges (`/var`, `C:\Windows\Temp`, `/Library`). The
   agent reports them instead of escalating silently.
 
+### Shell tool preference
+
+The agent uses one shell tool, preferring `ops_bash` (the OPS bundle's Bash terminal) when the
+profile publishes it, then `pwsh` on Windows or `bash` elsewhere. The skills are written for
+PowerShell on Windows and bash on POSIX, so the agent adapts the command syntax to whichever tool
+it actually has.
+
 ### Known incompatibility: profiles that deny host shell tools
 
-Some profiles hide the official shell tools on purpose. The `dsh-ops` bundle does this by default:
-its `deny-host-shell` component denies `pwsh`, `bash` and `pwsh_persistent` for every agent, so a
-preset that mounts `@deepseek-ai/dsh-tool-pwsh` has the tool registered but filtered out of the
-model's tool list. Cleanup Mode needs a shell to measure sizes, probe the trash and delete, so in
-such a profile it stops at step one and tells you why.
+A profile can hide the official shell tools on purpose. The `dsh-ops` bundle offers this through
+its `dsh-ops/shell` component with `shellPolicy: deny-host-shell`, which denies `pwsh`, `bash` and
+`pwsh_persistent` for every agent. A preset that mounts `@deepseek-ai/dsh-tool-pwsh` then has the
+tool registered but filtered out of the model's tool list. Cleanup Mode needs a shell to measure
+sizes, probe the trash and delete, so it stops at step one and tells you what is missing.
 
-Fix it on the profile side: open the `dsh-ops` settings and remove `pwsh` from
-「Host tool names denied by deny-host-shell policy」 (`deniedHostTools`), then start a new session.
-Or run Cleanup Mode in a profile that does not install `dsh-ops`. On a stock DSH profile the
-preset's `pwsh` row mounts normally — this is a profile policy, not a bundle defect.
+Fix it on the profile side: remove `pwsh` from that component's `deniedHostTools`, or do not enable
+the deny policy. Another option is to enable the OPS `shell` component in `advise` mode, which
+publishes `ops_bash` for every session — the agent then prefers it automatically.
+
+Note that the `dsh-ops` **mode rows** (`dsh-ops/mode-standard` and friends) only serve their own
+four built-in presets: `ops_bash` is gated by preset id, so a custom preset such as this one does
+not receive it from a mode row. The component form above is not gated that way.
 
 ## Install
 

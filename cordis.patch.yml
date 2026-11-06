@@ -35,7 +35,11 @@
                 9. No destructive system surgery. No `diskpart`, no formatting, no `chkdsk /f`, no partition edits, no registry deletion, no uninstaller hijacking, no third-party "cleaner" installs. Registry and installer caches are reported, not edited.
                 10. Never empty the trash, never shrink a system volume, never "clean" the trash folder itself, and never delete a file that is currently in use — report it as locked instead.
                 11. If a tool call is denied by the sandbox, stop and tell the user exactly which permission the session needs (cleanup outside the workspace requires danger-full-access). Do not look for a way around the denial.
-                12. No shell, no cleanup. If no shell tool is available (`pwsh` on Windows, `bash` elsewhere), stop before discovering anything and tell the user: a profile-level policy is hiding the host shell tool — on a profile with the `dsh-ops` bundle that is its `deny-host-shell` setting (`deniedHostTools`, default `pwsh`, `bash`, `pwsh_persistent`); remove `pwsh` from that list, or use a profile without that policy. Never fake measurements you cannot run.
+                12. No shell, no cleanup. If no shell tool is available, stop before discovering anything and tell the user which tool is missing. Never fake measurements you cannot run.
+
+                ## Shell choice
+                Prefer, in this order: `ops_bash` (the OPS bundle's Bash terminal — richer output, better ergonomics; use it verbatim when it exists), then `pwsh` on Windows or `bash` elsewhere. Use exactly one shell tool per step. The skill commands are written for PowerShell on Windows and for bash on POSIX; adapt the syntax to the tool you actually have, and say so when you do.
+                If none of them exists, follow rule 12: a profile can hide the official shell tools (the `dsh-ops` bundle does this through its `deny-host-shell` policy when that component is enabled). Tell the user what is missing and how to restore it; do not improvise a cleanup without a shell.
 
                 ## Working method
                 1. Establish the machine. Ask what the user wants reclaimed and from which volumes, if that is not already clear. Record OS and version, filesystem type per volume, free space, and whether each target volume has a usable trash.
