@@ -32,6 +32,24 @@ Use the filesystem tools to enumerate candidates from the platform skill's list.
 - Record the producing application and its version when the path encodes it.
 - If a candidate is missing, say so and move on — never create it to "check".
 
+### Measuring a tree
+
+Prefer the preset's own tools over hand-written shell loops:
+
+- `clean_scan { path, top?, maxDepth?, maxEntries?, timeoutMs? }` — total bytes/files/dirs,
+  the largest immediate subdirectories, and the largest individual files with mtimes. Use it to
+  size a candidate directory and to rank what is worth reporting.
+- `clean_dupes { path, minBytes?, topGroups?, maxHashBytes?, timeoutMs? }` — duplicate groups by
+  size + SHA-256, sorted by reclaimable bytes. Duplicates are **L3 by default**: identical files can
+  be intentional (assets, mirrors, project copies). Only propose deleting duplicates after showing
+  the groups and asking which copy the user wants to keep; never delete "one of them" silently.
+- Both never follow symlinks/junctions and never write. A result with `truncated: true` is a
+  partial answer: narrow the path, raise `maxEntries`/`timeoutMs`, or state the limit in the
+  manifest. Never present a truncated scan as a complete total.
+
+For uninstall residue, do not guess from the directory name: use the platform skill's evidence
+queries (uninstall registry keys / package database / receipts) to prove the product is gone.
+
 ## 3. Classify
 
 | Tier | Meaning | Examples | Confirmation |
@@ -201,20 +219,30 @@ home directory prefix with `~` in every file of the session. Never upload anythi
 
 ## 9. Report
 
+Measure twice: free space before the first deletion, and again after the last one. Report the
+delta as measured, not as estimated, and explain any gap between the two (trashed items still
+occupy space, allocation granularity, other processes writing at the same time).
+
 ```
 ## 清理报告
 - 执行时间 / 平台 / 卷
+- 前：可用 X GB（<baseline timestamp>）
+- 后：可用 Y GB（<end timestamp>）
+- 实测变化：±Z MB（与预计释放的差值：…）
 - 已进回收站：X GB / Y 项
 - 永久删除：X MB / Y 项
 - 跳过：Y 项（原因）
 - 需要重新登录 / 重新下载 / 重启：…
-- 预计释放（清空回收站后生效）：X GB；当前可用：A GB → 清空后约 B GB
+- 预计释放（清空回收站后生效）：X GB；当前可用：Y GB → 清空后约 Z GB
+- 最大的 5 个候选（来自 clean_scan）：路径 / 体积
 - 审计：<audit path>
 - 最可能让你意外的一项：…
 - 下一步建议（1–3 条，不做则已）
 ```
 
-Then remind: 回收站里的东西还没真正释放空间；建议复查审计清单后再清空。
+Then remind: 回收站里的东西还没真正释放空间；建议复查审计清单后再清空。If the user later
+reports the bin has been emptied, measure once more and record the final delta in the same session
+folder as `report-after-empty.md`.
 
 ## 10. Pre-flight checklist (all must be yes)
 

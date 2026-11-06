@@ -1,6 +1,6 @@
 {
   "name": "dsh-clean-agent",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Cleanup Mode (清理模式) — a DSH agent preset that reclaims disk space and removes leftovers safely",
   "keywords": [
     "dsh",
@@ -16,13 +16,15 @@
     "./package.json": "./package.json",
     "./locale/*.json": "./locale/*.json",
     "./icon": "./icon.svg",
-    "./shell": "./lib/shell.js"
+    "./shell": "./lib/shell.js",
+    "./scan": "./lib/scan.js"
   },
   "files": [
     "lib",
     "skills",
     "locale",
     "docs",
+    "scripts",
     "cordis.patch.yml",
     "icon.svg",
     "README.md",
@@ -30,6 +32,9 @@
     "CHANGELOG.md",
     "LICENSE"
   ],
+  "scripts": {
+    "verify": "node scripts/verify.mjs"
+  },
   "license": "MIT",
   "engines": {
     "dsh": ">=0.2.1-rc.5"

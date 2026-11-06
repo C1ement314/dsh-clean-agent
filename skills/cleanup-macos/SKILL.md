@@ -118,3 +118,34 @@ Never empty `~/.Trash`, never delete `~/.Trash` itself, never run `rm -rf ~/.Tra
 - **Automation permissions**: the first `osascript` call may need user approval in System
   Settings → Privacy & Security → Automation. If it is denied, ask the user to allow it or use
   the same-volume `mv` fallback with their consent.
+
+## Uninstall residue — evidence first
+
+Do not treat `~/Library/Application Support/<App>` as residue because the app "is not in
+Applications". Prove absence first; a leftover preference file can still hold data the user wants.
+
+```bash
+# Is the app bundle still installed anywhere?
+mdfind "kMDItemCFBundleIdentifier == 'com.vendor.app'" 2>/dev/null
+ls -d /Applications/*.app/Contents/Info.plist 2>/dev/null | wc -l
+# Receipts and their file lists
+pkgutil --pkgs | grep -i '<vendor>'
+pkgutil --files '<pkg-id>' | head -50
+# Launch items that still reference the vendor
+ls ~/Library/LaunchAgents /Library/LaunchAgents /Library/LaunchDaemons 2>/dev/null | grep -i '<vendor>'
+launchctl list | grep -i '<vendor>'
+```
+
+Where residue lives for bundle id `<bundle-id>` / vendor `<Vendor>`:
+
+- `~/Library/Application Support/<App>` — user data (settings, databases, caches).
+- `~/Library/Preferences/<bundle-id>.plist` — preferences; often tiny and harmless.
+- `~/Library/Containers/<bundle-id>` and `~/Library/Group Containers/<group>` — sandboxed app data.
+- `~/Library/Saved Application State/<bundle-id>.savedState` — window state, L1.
+- `~/Library/Caches/<bundle-id>` — cache, L1.
+- `/Library/Application Support/<Vendor>`, `/Library/Preferences/<bundle-id>.plist`,
+  `/Library/LaunchAgents/<vendor>.plist`, `/Library/Receipts` — machine-wide; need admin.
+
+Manifest rule: quote the evidence in `why` ("`pkgutil --pkgs` has no receipt for com.vendor.app;
+no LaunchAgent references it"). If a receipt still exists, the product is installed — the folder is
+not residue. If evidence is mixed, the item is L3.

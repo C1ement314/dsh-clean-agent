@@ -125,3 +125,33 @@ and never run `rm -rf ~/.cache` wholesale — enumerate the children instead.
 - **Root versus user.** Deleting under `/var`, `/etc`, `/opt` needs root; if the session is not
   privileged, list those items as "需要管理员权限" and stop rather than escalating silently.
 - **Case-sensitive filesystems.** Assume case-sensitive on Linux; do not "fix" paths by case.
+
+## Uninstall residue — evidence first
+
+A config directory under `~/.config` is only residue when the package is gone. Prove it, and check
+whether the path is owned by a package or shared with another one:
+
+```bash
+# Is the package installed?
+dpkg-query -W -f='${Status} ${Version}\n' '<pkg>' 2>/dev/null
+rpm -q '<pkg>' 2>/dev/null
+pacman -Q '<pkg>' 2>/dev/null
+flatpak list --app --columns=application 2>/dev/null | grep -i '<app>'
+snap list 2>/dev/null | grep -i '<app>'
+# Which package owns this path (empty output = unowned)?
+dpkg -S '<path>' 2>/dev/null
+rpm -qf '<path>' 2>/dev/null
+pacman -Qo '<path>' 2>/dev/null
+```
+
+Where residue lives for a package `<app>`:
+
+- `~/.config/<app>`, `~/.local/share/<app>`, `~/.cache/<app>` — user state.
+- `~/.config/systemd/user/<app>.service` — user unit; check `systemctl --user list-unit-files`.
+- `/etc/<app>`, `/var/lib/<app>`, `/var/log/<app>` — system state (root).
+- `/opt/<Vendor>` — vendored installs; confirm the directory is not a live install.
+- `~/.local/share/applications/<app>.desktop`, `~/.config/autostart/<app>.desktop` — launchers.
+
+Manifest rule: quote the evidence in `why` ("`dpkg-query` reports no package; `dpkg -S` shows the
+path is unowned"). A path owned by another package, or one still referenced by a systemd unit, is
+**not** residue — mark it L3 or drop it. If package-manager output is ambiguous, stay L3.

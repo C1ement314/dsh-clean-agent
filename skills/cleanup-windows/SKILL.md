@@ -134,3 +134,43 @@ Never empty the bin, never touch `C:\$Recycle.Bin\*` directly, and never disable
   upper bound.
 - **PowerShell version.** `Get-Volume` needs Windows 8+; on older hosts fall back to
   `Get-WmiObject Win32_LogicalDisk`.
+## Uninstall residue — evidence first
+
+A directory whose name looks like an app is not evidence that the app is gone. Prove it, then
+classify. "已卸载残留" is L2 only when the product is provably absent; otherwise it is L3 or a
+normal app-data folder the user may still need.
+
+Evidence that the product is installed (any hit means do **not** treat its data as residue):
+
+```powershell
+$keys = @(
+  'HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\*',
+  'HKLM:\Software\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\*',
+  'HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\*'
+)
+Get-ItemProperty $keys -ErrorAction SilentlyContinue |
+  Select-Object DisplayName, DisplayVersion, Publisher, InstallLocation, UninstallString, PSChildName
+Get-Package -ErrorAction SilentlyContinue | Select-Object Name, Version, ProviderName
+winget list --accept-source-agreements 2>$null
+```
+
+Also check that nothing still points at the vendor:
+
+```powershell
+Get-Service | Where-Object { $_.Name -like '*<vendor>*' -or $_.DisplayName -like '*<vendor>*' }
+Get-ScheduledTask | Where-Object { $_.TaskName -like '*<vendor>*' }
+Get-CimInstance Win32_StartupCommand | Select-Object Name, Command, Location
+```
+
+Where residue actually lives for a product `<Vendor>\<App>`:
+
+- `%LOCALAPPDATA%\<Vendor>\<App>`, `%APPDATA%\<Vendor>\<App>` — per-user settings and data.
+- `%LOCALAPPDATA%\Packages\<PackageFamilyName>` — UWP/MSIX app state.
+- `%PROGRAMDATA%\<Vendor>\<App>` — machine-wide data, often shared between versions.
+- `%PROGRAMFILES%\<Vendor>\<App>` — an app directory that survived an uninstall; verify it is not
+  a shared runtime before proposing it.
+- `C:\ProgramData\Package Cache` — installer cache for VC++ redistributables / Visual Studio.
+  Deleting it breaks repair and uninstall; only with an explicit warning.
+
+Manifest rule: for each residue candidate, quote the evidence you ran ("no uninstall key matching
+*Vendor*, no service, no scheduled task") in the `why` field. If evidence is mixed, the item is L3.

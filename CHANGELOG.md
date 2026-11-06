@@ -4,6 +4,29 @@ All notable changes to this project are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and the project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.0] - 2026-11-06
+
+### Added
+- `clean_scan` tool: read-only tree measurement — total bytes/files/dirs, largest immediate
+  subdirectories, largest files with mtimes, entry budget and deadline, `truncated` flag, per-path
+  error samples. Never follows symlinks/junctions.
+- `clean_dupes` tool: duplicate groups by size + SHA-256, sorted by reclaimable bytes, with a
+  large-file hash cap and the same truncation semantics.
+- Before/after measurement in the workflow and the report: the agent records free space before the
+  first deletion and after the last one, and reports the measured delta separately from the
+  estimate.
+- Uninstall-residue evidence sections in all three platform skills (Windows uninstall registry keys,
+  services and startup entries; macOS receipts, LaunchAgents and containers; Linux package-manager
+  queries and path ownership), with the rule that mixed evidence stays L3.
+- `scripts/verify.mjs` and `npm run verify`: dependency-free local check of the skill provider, both
+  scan tools, the shell plugin contract, and the patch rows.
+
+### Changed
+- Persona discovery step now names the measurement tools and treats a truncated result as a partial
+  answer; the report step requires measured before/after numbers.
+- The `cleanup` skill documents when to use `clean_scan`/`clean_dupes`, that duplicates are L3 by
+  default, and the `report-after-empty.md` follow-up.
+
 ## [Unreleased]
 
 ### Known issues

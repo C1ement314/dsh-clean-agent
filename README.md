@@ -15,14 +15,21 @@ and it refuses to touch operating-system files and the DSH installation.
 
 1. **Interview** — what to reclaim, which volume, what must be preserved.
 2. **Discover** — read-only enumeration of known leftover locations for your OS.
-3. **Classify** — L1 (regenerates itself), L2 (safe but visible consequence), L3 (user data).
-4. **Manifest** — a table with every path, size, why it is a leftover, and what you lose.
-5. **Confirm** — one confirmation for L1, grouped confirmations for L2, item by item for L3.
-6. **Delete** — trash first; permanent deletion only where no trash exists, and only after a
+3. **Measure** — `clean_scan` (tree totals, largest subdirectories, largest files) and
+   `clean_dupes` (duplicate groups by size + SHA-256) turn "this folder looks big" into numbers;
+   both never follow links and both report when a walk was truncated.
+4. **Classify** — L1 (regenerates itself), L2 (safe but visible consequence), L3 (user data).
+   Uninstall residue is L2 only with evidence that the product is gone (uninstall keys, package
+   database, receipts); otherwise it stays L3.
+5. **Manifest** — a table with every path, size, why it is a leftover, and what you lose.
+6. **Confirm** — one confirmation for L1, grouped confirmations for L2, item by item for L3.
+7. **Delete** — trash first; permanent deletion only where no trash exists, and only after a
    separate "cannot be recovered" confirmation.
-7. **Audit** — `manifest.json`, `deleted.csv` and `protected.json` in a per-OS audit directory.
-8. **Report** — what was freed, what was skipped, what needs a re-login or a reboot, and a
-   reminder that trashed files free nothing until the trash is emptied.
+8. **Audit** — `manifest.json`, `deleted.csv` and `protected.json` in a per-OS audit directory.
+9. **Report with real numbers** — free space is measured before the first deletion and after the
+   last one, so the report separates measured delta from estimated reclaim; it also lists what was
+   skipped, what needs a re-login or a reboot, and reminds you that trashed files free nothing until
+   the trash is emptied.
 
 ## Risk tiers
 
