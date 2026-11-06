@@ -87,7 +87,10 @@ not receive it from a mode row. The component form above is not gated that way.
 ## Install
 
 ```bash
-# from a prebuilt tarball (recommended)
+# from npm (recommended)
+dsh plugin --profile <profile> add dsh-clean-agent@0.2.0
+
+# or from the prebuilt tarball (same version, no npm account needed)
 dsh plugin --profile <profile> add https://github.com/C1ement314/dsh-clean-agent/releases/download/v0.2.0/dsh-clean-agent-0.2.0.tgz
 
 # from a checkout (development): point the manager at this directory
@@ -97,9 +100,6 @@ plugin_manager → action: install_bundle, target: <absolute path to this direct
 dsh plugin --profile <profile> add link:/absolute/path/to/dsh-clean-agent
 ```
 
-The npm registry publish is pending account-side two-factor setup, so the tarball on the release
-is the prebuilt install path for now. For a published package, install the bundle with
-`plugin_manager` and select it in the bundle list.
 A preset is only picked up by **new** sessions: open a new session and choose 清理模式 /
 Cleanup Mode from the preset selector.
 

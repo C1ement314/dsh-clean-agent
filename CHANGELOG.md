@@ -21,6 +21,9 @@ All notable changes to this project are documented here. The format follows
 - `scripts/verify.mjs` and `npm run verify`: dependency-free local check of the skill provider, both
   scan tools, the shell plugin contract, and the patch rows.
 
+### Distribution
+- Published to npm as dsh-clean-agent@0.2.0; the same package is attached as a tarball to the v0.2.0 GitHub release.
+
 ### Changed
 - Persona discovery step now names the measurement tools and treats a truncated result as a partial
   answer; the report step requires measured before/after numbers.

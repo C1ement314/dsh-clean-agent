@@ -77,7 +77,10 @@ profile 可以刻意隐藏官方 shell 工具。`dsh-ops` 组合包通过它的 
 ## 安装
 
 ```bash
-# 用预构建 tarball（推荐）
+# 从 npm 安装（推荐）
+dsh plugin --profile <profile> add dsh-clean-agent@0.2.0
+
+# 或用预构建 tarball（同版本，不需要 npm 账号）
 dsh plugin --profile <profile> add https://github.com/C1ement314/dsh-clean-agent/releases/download/v0.2.0/dsh-clean-agent-0.2.0.tgz
 
 # 源码开发安装：plugin_manager → action: install_bundle，target 填本目录绝对路径
@@ -85,10 +88,7 @@ dsh plugin --profile <profile> add https://github.com/C1ement314/dsh-clean-agent
 dsh plugin --profile <profile> add link:/absolute/path/to/dsh-clean-agent
 ```
 
-npm 发布因为账号侧的 2FA 配置暂时没完成，所以现阶段预构建安装走 Release 上的 tarball。
-
-发布版通过 `plugin_manager` 安装 bundle 并在 bundle 列表里勾选。预设只对**新会话**生效：新开一个
-会话，在预设选择器里选「清理模式」。
+预设只对**新会话**生效：新开一个会话，在预设选择器里选「清理模式」。
 
 如果预设卡片显示「加载失败」，诊断文字里会指出具体是哪个插件行失败；已知的失败文本和安全的演练
 沙盒见 [docs/testing.md](docs/testing.md)。
