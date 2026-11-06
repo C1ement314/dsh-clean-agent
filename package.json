@@ -43,5 +43,10 @@
     "bundle": {
       "patch": "./cordis.patch.yml"
     }
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/C1ement314/dsh-clean-agent.git"
+  },
+  "homepage": "https://github.com/C1ement314/dsh-clean-agent#readme"
 }
