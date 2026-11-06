@@ -47,6 +47,8 @@ Probe before promising:
 ```powershell
 # Filesystem type of the target volume (NTFS/ReFS can have a bin, FAT32/exFAT cannot)
 Get-Volume -DriveLetter C | Select-Object FileSystem, FileSystemType, DriveType, SizeRemaining
+# Fallback when CIM is blocked by the sandbox (Get-Volume / Get-PSDrive denied):
+[System.IO.DriveInfo]::new('C:') | Format-List Name, DriveType, DriveFormat, AvailableFreeSpace, TotalSize
 # Is the per-volume bin present and writable?
 Test-Path 'C:\$Recycle.Bin'
 ```
